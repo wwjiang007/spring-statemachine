@@ -127,6 +127,16 @@ configure(allprojects) {
 			}
 		}
 		exclude '**/*IntegrationTests.*'
+		if (project.hasProperty('statemachineTestResults') && statemachineTestResults.toBoolean()) {
+			afterSuite { desc, result ->
+				if (!desc.parent) {
+					def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+					def startItem = '|  ', endItem = '  |'
+					def repeatLength = startItem.length() + output.length() + endItem.length()
+					println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+				}
+			}
+		}
 	}
 }
 
@@ -211,8 +221,6 @@ project('spring-statemachine-core') {
 		testCompile 'org.springframework:spring-webmvc'
 		testCompile 'io.projectreactor:reactor-test'
 		testCompile 'org.apache.tomcat.embed:tomcat-embed-core'
-		testCompile 'org.hamcrest:hamcrest-core'
-		testCompile 'org.hamcrest:hamcrest-library'
 		testCompile('org.mockito:mockito-core') { dep ->
 			exclude group: 'org.hamcrest'
 		}
@@ -294,8 +302,6 @@ project('spring-statemachine-kryo') {
 			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 		}
 		testCompile 'org.springframework:spring-test'
-		testCompile 'org.hamcrest:hamcrest-core'
-		testCompile 'org.hamcrest:hamcrest-library'
 		testCompile("org.junit.jupiter:junit-jupiter-api")
 		testCompile("org.junit.jupiter:junit-jupiter-engine")
 		testRuntime 'org.apache.logging.log4j:log4j-core'
@@ -319,8 +325,6 @@ project('spring-statemachine-zookeeper') {
 		}
 		testCompile 'org.apache.curator:curator-test'
 		testCompile 'org.springframework:spring-test'
-		testCompile 'org.hamcrest:hamcrest-core'
-		testCompile 'org.hamcrest:hamcrest-library'
 		testCompile("org.junit.jupiter:junit-jupiter-api")
 		testCompile("org.junit.jupiter:junit-jupiter-engine")
 		testRuntime 'org.apache.logging.log4j:log4j-core'
@@ -369,8 +373,6 @@ project('spring-statemachine-cluster') {
 		}
 		testCompile 'org.apache.curator:curator-test'
 		testCompile 'org.springframework:spring-test'
-		testCompile 'org.hamcrest:hamcrest-core'
-		testCompile 'org.hamcrest:hamcrest-library'
 		testCompile("org.junit.jupiter:junit-jupiter-api")
 		testCompile("org.junit.jupiter:junit-jupiter-engine")
 		testRuntime 'org.apache.logging.log4j:log4j-core'
@@ -435,8 +437,6 @@ project('spring-statemachine-build-tests') {
 		testCompile 'com.h2database:h2'
 		testCompile 'org.springframework.boot:spring-boot-starter'
 		testCompile 'org.springframework:spring-test'
-		testCompile 'org.hamcrest:hamcrest-core'
-		testCompile 'org.hamcrest:hamcrest-library'
 	}
 }
 
@@ -446,8 +446,6 @@ configure(recipeProjects()) {
 		testCompile project(path:':spring-statemachine-core', configuration:'testArtifacts')
 		testCompile 'io.projectreactor:reactor-test'
 		testCompile 'org.springframework:spring-test'
-		testCompile 'org.hamcrest:hamcrest-core'
-		testCompile 'org.hamcrest:hamcrest-library'
 		testCompile("org.junit.jupiter:junit-jupiter-api")
 		testCompile("org.junit.jupiter:junit-jupiter-engine")
 	}
@@ -460,8 +458,6 @@ project('spring-statemachine-recipes-common') {
 		testCompile project(path:':spring-statemachine-core', configuration:'testArtifacts')
 		testCompile 'io.projectreactor:reactor-test'
 		testCompile 'org.springframework:spring-test'
-		testCompile 'org.hamcrest:hamcrest-core'
-		testCompile 'org.hamcrest:hamcrest-library'
 		testCompile("org.junit.jupiter:junit-jupiter-api")
 		testCompile("org.junit.jupiter:junit-jupiter-engine")
 	}
@@ -555,8 +551,6 @@ configure(sampleProjects()) {
 		}
 		testCompile 'org.springframework.boot:spring-boot-test'
 		testCompile 'org.springframework:spring-test'
-		testCompile 'org.hamcrest:hamcrest-core'
-		testCompile 'org.hamcrest:hamcrest-library'
 		testCompile("org.junit.jupiter:junit-jupiter-api")
 		testCompile("org.junit.jupiter:junit-jupiter-engine")
 	}
